@@ -15,8 +15,8 @@ static inline void shuffle(data_t *data, int size)
 void load_testing_data(data_t *data)
 {
     for (int i = 0; i < NN_TESTING_SIZE; i++) {
-        data[i].inputs = malloc(sizeof(double) * NN_NUM_INPUTS);
-        data[i].expected_output = malloc(sizeof(double) * NN_NUM_OUTPUTS);
+        data[i].inputs = malloc(sizeof(double) * NN_INPUTS);
+        data[i].expected_output = malloc(sizeof(double) * NN_OUTPUTS);
     }
 
     data[0].inputs[0] = 4.6;
@@ -425,8 +425,8 @@ void load_testing_data(data_t *data)
 void load_training_data(data_t *data)
 {
     for (int i = 0; i < NN_TRAINING_SIZE; i++) {
-        data[i].inputs = malloc(sizeof(double) * NN_NUM_INPUTS);
-        data[i].expected_output = malloc(sizeof(double) * NN_NUM_OUTPUTS);
+        data[i].inputs = malloc(sizeof(double) * NN_INPUTS);
+        data[i].expected_output = malloc(sizeof(double) * NN_OUTPUTS);
     }
 
     data[0].inputs[0] = 5.1;

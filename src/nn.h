@@ -9,9 +9,9 @@
 #ifndef NEURALNET_NN_H
 #define NEURALNET_NN_H
 
-#define NN_NUM_HIDDEN_LAYERS    2
-#define NN_NUM_INPUTS           4
-#define NN_NUM_OUTPUTS          3
+#define NN_HIDDEN_LAYERS        2
+#define NN_INPUTS               4
+#define NN_OUTPUTS              3
 #define NN_LEARNING_RATE        0.1f
 #define NN_DEFAULT_BIAS         1.0f
 #define NN_EPOCHS               10000
@@ -64,11 +64,11 @@ typedef struct {
  *
  * **Example Initialization**
  * @code
- *      #define NUM_HIDDEN_LAYERS 2
+ *      #define NN_HIDDEN_LAYERS 2
  *
  *      neural_network_t nn;
- *      const int neurons_per_hidden_layer[NUM_HIDDEN_LAYERS] = {4, 6};
- *      init_nn(&nn, NUM_INPUTS, NUM_OUTPUTS, NUM_HIDDEN_LAYERS, neurons_per_hidden_layer);
+ *      const int neurons_per_hidden_layer[NN_HIDDEN_LAYERS] = {4, 6};
+ *      init_nn(&nn, NN_INPUTS, NN_OUTPUTS, NN_HIDDEN_LAYERS, neurons_per_hidden_layer);
  * @endcode
  * @memberof neural_net
  */

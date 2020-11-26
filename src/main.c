@@ -6,6 +6,74 @@
 #include "data.h"
 #include "nn.h"
 
+static void load_weights(neural_network_t *net);
+static void save_weights(neural_network_t *net);
+static void print_weights(neural_network_t *net);
+static void record(neural_network_t *net, int flag);
+static inline double* max(double *a, double *b, double *c);
+
+int main() {
+    long seed = (long)time(NULL);
+    srand(seed);
+
+    // Initialize the data
+    data_t training_data[NN_TRAINING_SIZE];
+    data_t testing_data[NN_TESTING_SIZE];
+    load_training_data(training_data);
+    load_testing_data(testing_data);
+
+    // Initialize the neural net
+    neural_network_t nn;
+    int neurons_per_layer[NN_HIDDEN_LAYERS] = {4, 6};
+    init_nn(&nn, NN_INPUTS, NN_OUTPUTS, NN_HIDDEN_LAYERS, neurons_per_layer);
+
+    if(NN_RECORD)
+        remove(NN_VISUALIZER_PATH);
+    if (NN_LOAD_WEIGHTS && access(NN_SAVE_PATH, F_OK) != -1) {
+        load_weights(&nn);
+    } else {
+        for (int e = 0; e < NN_EPOCHS; e++) {
+            for (int i = 0; i < NN_TRAINING_SIZE; i++) {
+                forward_propagate(&nn, training_data[i].inputs);
+                back_propagate(&nn, training_data[i].expected_output);
+                update_weights_biases(&nn);
+            }
+            if (NN_RECORD) {
+                if (e == NN_EPOCHS-1)
+                    record(&nn, 1);
+                else if (e % 10 == 0)
+                    record(&nn, 0);
+            }
+        }
+        if (NN_SAVE_WEIGHTS)
+            save_weights(&nn);
+    }
+    print_weights(&nn);
+
+    // Score the model
+    int n_correct = 0;
+    for (int i = 0; i < NN_TESTING_SIZE; i++) {
+        forward_propagate(&nn, testing_data[i].inputs);
+        for (int j = 0; j < nn.output.size; j++) {
+            printf("%d:\t%lf\t%lf", j, nn.output.neurons[j].activation, testing_data[i].expected_output[j]);
+            if (&nn.output.neurons[j].activation == max(&nn.output.neurons[0].activation, &nn.output.neurons[1].activation, &nn.output.neurons[2].activation)) {
+                if (testing_data[i].expected_output[j] == 1) {
+                    printf(" <<<<<");
+                    n_correct++;
+                } else {
+                    printf(" XXX");
+                }
+            }
+            printf("\n");
+        }
+        printf("\n");
+    }
+    printf("===============================\n");
+
+    printf("Seed: %ld\n", seed);
+    printf("Model Accuracy: %.4f%%\n", (((double)n_correct)/NN_TESTING_SIZE) * 100.0);
+}
+
 
 static inline double* max(double *a, double *b, double *c)
 {
@@ -111,68 +179,4 @@ static void load_weights(neural_network_t *net)
     }
     fclose(fp);
     //printf("===============================\n");
-}
-
-
-int main() {
-    long seed = (long)time(NULL);
-    srand(seed);
-
-    // Initialize the data
-    data_t training_data[NN_TRAINING_SIZE];
-    data_t testing_data[NN_TESTING_SIZE];
-    load_training_data(training_data);
-    load_testing_data(testing_data);
-
-    // Initialize the neural net
-    neural_network_t nn;
-    int neurons_per_layer[NN_NUM_HIDDEN_LAYERS] = {4, 6};
-    init_nn(&nn, NN_NUM_INPUTS, NN_NUM_OUTPUTS, NN_NUM_HIDDEN_LAYERS, neurons_per_layer);
-
-    if(NN_RECORD)
-        remove("../visualizer/data.csv");
-    if (NN_LOAD_WEIGHTS && access(NN_SAVE_PATH, F_OK) != -1) {
-        load_weights(&nn);
-    } else {
-        for (int e = 0; e < NN_EPOCHS; e++) {
-            for (int i = 0; i < NN_TRAINING_SIZE; i++) {
-                forward_propagate(&nn, training_data[i].inputs);
-                back_propagate(&nn, training_data[i].expected_output);
-                update_weights_biases(&nn);
-            }
-            if (NN_RECORD) {
-                if (e == NN_EPOCHS-1)
-                    record(&nn, 1);
-                else if (e % 10 == 0)
-                    record(&nn, 0);
-            }
-        }
-        if (NN_SAVE_WEIGHTS)
-            save_weights(&nn);
-    }
-    print_weights(&nn);
-
-    // Score the model
-    int n_correct = 0;
-    for (int i = 0; i < NN_TESTING_SIZE; i++) {
-        forward_propagate(&nn, testing_data[i].inputs);
-        for (int j = 0; j < nn.output.size; j++) {
-            printf("%d:\t%lf\t%lf", j, nn.output.neurons[j].activation, testing_data[i].expected_output[j]);
-            if (&nn.output.neurons[j].activation == max(&nn.output.neurons[0].activation, &nn.output.neurons[1].activation, &nn.output.neurons[2].activation)) {
-                if (testing_data[i].expected_output[j] == 1) {
-                    printf(" <<<<<");
-                    n_correct++;
-                } else {
-                    printf(" XXX");
-                }
-            }
-            printf("\n");
-        }
-        printf("\n");
-    }
-    printf("===============================\n");
-
-    printf("Seed: %ld\n", seed);
-    printf("Model Accuracy: %.4f%%\n", (((double)n_correct)/NN_TESTING_SIZE) * 100.0);
-    //print_weights(&nn);
 }
