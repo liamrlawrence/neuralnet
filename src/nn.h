@@ -21,7 +21,7 @@
 #define NN_LOAD_WEIGHTS         0
 #define NN_SAVE_WEIGHTS         0
 #define NN_SAVE_PATH            "../data/net.dat"
-#define NN_VISUALIZER_PATH      "../visualizer/data.csv"
+#define NN_VISUALIZER_PATH      "../data/visualizer.csv"
 
 
 // NEURAL NETWORK STRUCTS //
@@ -53,7 +53,7 @@ typedef struct {
 
 /**
  * @brief
- *      Initialize a neural_network_t.
+ *      Initialize a neural_network_t struct.
  * @param[in,out]   net         Reference to a neural net.
  * @param[in]       input_n     Number of input neurons.
  * @param[in]       output_n    Number of output neurons.
@@ -108,5 +108,6 @@ void back_propagate(neural_network_t *net, const double *expected);
  * @memberof neural_net
  */
 void update_weights_biases(neural_network_t *net);
+
 
 #endif //NEURALNET_NN_H

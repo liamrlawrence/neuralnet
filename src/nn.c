@@ -71,7 +71,7 @@ void init_nn(neural_network_t *net, const int input_n, const int output_n, const
     }
 }
 
-static void update_neurons(layer_t* const layer)
+static void update_neurons(layer_t *const layer)
 {
     neuron_t *neuron;
 

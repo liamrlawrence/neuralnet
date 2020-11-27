@@ -8,7 +8,6 @@ class neuron {
     this.y = y;
     this.n_weights = n_weights;
     this.weights = new float[n_weights];
-    //this.val = random(3);
   }
 
   void draw() {

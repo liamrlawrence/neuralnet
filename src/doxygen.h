@@ -3,7 +3,7 @@
 
 // Group & Class for the NNF //
 /**
- * @defgroup nn_framework Neural Network Framework
+ * @defgroup nn_framework Neural Net Framework
  * @addtogroup nn_framework
  * @{
  * @class neural_net

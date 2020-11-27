@@ -6,11 +6,13 @@
 #include "data.h"
 #include "nn.h"
 
+
 static void load_weights(neural_network_t *net);
 static void save_weights(neural_network_t *net);
 static void print_weights(neural_network_t *net);
 static void record(neural_network_t *net, int flag);
 static inline double* max(double *a, double *b, double *c);
+
 
 int main() {
     long seed = (long)time(NULL);
